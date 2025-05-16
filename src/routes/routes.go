@@ -27,5 +27,10 @@ func SetupRoutes() http.Handler {
 	// Rota para obter o resumo mensal
 	r.HandleFunc("/summary/{userId}", controllers.GetMonthlySummary).Methods("GET")
 
+	// Rota categorias
+	r.HandleFunc("/categories", controllers.CreateCategory).Methods("POST")
+	r.HandleFunc("/categories/{userId}", controllers.GetCategories).Methods("GET")
+	r.HandleFunc("/categories/{id}", controllers.DeleteCategory).Methods("DELETE")
+
 	return r
 }
