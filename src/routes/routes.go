@@ -24,5 +24,8 @@ func SetupRoutes() http.Handler {
 	r.HandleFunc("/users/{userId}/expenses/{id}/pay", controllers.PayExpense).Methods("PATCH")
 	r.HandleFunc("/users/{userId}/expenses/{id}/unpay", controllers.UnpayExpense).Methods("PATCH")
 
+	// Rota para obter o resumo mensal
+	r.HandleFunc("/summary/{userId}", controllers.GetMonthlySummary).Methods("GET")
+
 	return r
 }
