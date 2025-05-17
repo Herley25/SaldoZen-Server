@@ -26,6 +26,6 @@ CREATE TABLE IF NOT EXISTS categories (
   id UUID PRIMARY KEY,
   user_id UUID REFERENCES users(id) ON DELETE CASCADE,
   name TEXT NOT NULL,
-  created_at TIMESTAMP DEFAULT NOW()
+  created_at TIMESTAMP DEFAULT NOW(),
   UNIQUE (user_id, name) -- impede categorias duplicadas para o mesmo usuário
 );
