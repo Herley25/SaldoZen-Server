@@ -163,7 +163,7 @@ func ListAllExpenses(w http.ResponseWriter, r *http.Request) {
 func GetExpenseByID(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	userId := params["userId"]
-	expenseId := params["expenseId"]
+	expenseId := params["id"]
 
 	row := db.DB.QueryRow(`
 		SELECT id, user_id, descricao, valor, vencimento, paga, data_pagamento, categoria, observacoes, created_at
