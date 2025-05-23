@@ -14,11 +14,9 @@ import (
 
 	"github.com/golang-jwt/jwt"
 	"github.com/google/uuid"
-<<<<<<< Updated upstream
-=======
-	"github.com/gorilla/mux"
 	"golang.org/x/crypto/bcrypt"
->>>>>>> Stashed changes
+
+	"github.com/gorilla/mux"
 )
 
 func CreateUser(w http.ResponseWriter, r *http.Request) {
