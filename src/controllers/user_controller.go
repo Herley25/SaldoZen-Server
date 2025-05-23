@@ -26,16 +26,24 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if user.Name == "" || user.Email == "" || user.PasswordHash == "" {
+	if user.Name == "" || user.Email == "" || user.Password == "" {
 		http.Error(w, "Nome, e-mail e senha são obrigatórios", http.StatusBadRequest)
 		return
 	}
 
+	// Gerar o hash da senha
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
+	if err != nil {
+		http.Error(w, "Erro ao gerar hash da senha: "+err.Error(), http.StatusInternalServerError)
+		return
+	}
+
 	user.ID = uuid.New()
+	user.PasswordHash = string(hashedPassword)
 	user.CreatedAt = time.Now()
 
-	_, err := db.DB.Exec(`
-		INSERT INTO users (id, nome, email, senha, created_at)
+	_, err = db.DB.Exec(`
+		INSERT INTO users (id, name, email, password_hash, created_at)
 		VALUES ($1, $2, $3, $4, $5)
 	`, user.ID, user.Name, user.Email, user.PasswordHash, user.CreatedAt)
 
@@ -43,6 +51,9 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Erro ao salvar usuário: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
+
+	// limpar a senha do retorno
+	user.Password = ""
 
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(user)
