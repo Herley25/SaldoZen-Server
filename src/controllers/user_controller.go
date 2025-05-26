@@ -60,6 +60,15 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 }
 
 // LoginUser faz o login de um usuário
+//
+//	@Summary	Login
+//	@Tags		auth
+//	@Accept		json
+//	@Produce	json
+//	@Param		credentials	body		object{email=string,password=string}	true	"Credenciais"
+//	@Success	200		{object}	map[string]string
+//	@Failure	400,401	{string}	string	"erro"
+//	@Router		/login [post]
 func LoginUser(w http.ResponseWriter, r *http.Request) {
 	var creds struct {
 		Email    string `json:"email"`

@@ -15,6 +15,17 @@ import (
 )
 
 // Controller para criar uma nova despesa
+
+//	@Summary	Criar despesa
+//	@Tags		despesas
+//	@Security	BearerAuth
+//	@Accept		json
+//	@Produce	json
+//	@Param		expense	body		models.Expense	true	"Despesa"
+//	@Success	201	{object}	models.Expense
+//	@Failure	400,401	{string}	string
+//	@Router		/expenses [post]
+
 func CreateExpense(w http.ResponseWriter, r *http.Request) {
 	var expense models.Expense
 	if err := json.NewDecoder(r.Body).Decode(&expense); err != nil {

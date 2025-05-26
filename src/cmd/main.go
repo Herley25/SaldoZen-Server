@@ -1,3 +1,11 @@
+//	@title			SaldoZen API
+//	@version		1.0
+//	@description	API de controle financeiro pessoal.
+
+//	@securityDefinitions.apikey	BearerAuth
+//	@in							header
+//	@name						Authorization
+
 package main
 
 import (
