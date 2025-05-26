@@ -44,5 +44,8 @@ func SetupRoutes() http.Handler {
 	r.Handle("/categories/{userId}", secure(http.HandlerFunc(controllers.GetCategories))).Methods("GET")
 	r.Handle("/categories/{id}", secure(http.HandlerFunc(controllers.DeleteCategory))).Methods("DELETE")
 
+	// Rota para gráficos
+	r.Handle("/charts/expenses-by-category/{userId}", secure(http.HandlerFunc(controllers.GetExpensesByCategory))).Methods("GET")
+
 	return r
 }
