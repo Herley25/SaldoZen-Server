@@ -5,11 +5,16 @@ import (
 	"finance/src/middlewares"
 	"net/http"
 
+	_ "finance/src/docs" // Importando os docs gerados pelo Swag
+
 	"github.com/gorilla/mux"
+	httpSwagger "github.com/swaggo/http-swagger"
 )
 
 func SetupRoutes() http.Handler {
 	r := mux.NewRouter()
+
+	r.PathPrefix("/swagger/").Handler(httpSwagger.WrapHandler)
 
 	r.HandleFunc("/users", controllers.CreateUser).Methods("POST")
 	r.HandleFunc("/login", controllers.LoginUser).Methods("POST")
