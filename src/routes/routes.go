@@ -46,6 +46,8 @@ func SetupRoutes() http.Handler {
 
 	// Rota para gráficos
 	r.Handle("/charts/expenses-by-category/{userId}", secure(http.HandlerFunc(controllers.GetExpensesByCategory))).Methods("GET")
+	r.Handle("/charts/expenses-by-status/{userId}", secure(http.HandlerFunc(controllers.GetExpensesByStatus))).Methods("GET")
+	r.Handle("/charts/monthly-summary/{userId}", secure(http.HandlerFunc(controllers.GetMonthlySummaryChart))).Methods("GET")
 
 	return r
 }
