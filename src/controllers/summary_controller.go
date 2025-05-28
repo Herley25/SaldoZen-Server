@@ -44,14 +44,18 @@ func GetMonthlySummary(w http.ResponseWriter, r *http.Request) {
 	summary.Mes = month
 	summary.Ano = year
 
+	// Consulta para obter o resumo mensal
 	query := `
 		SELECT
-			COALESCE(SUM(valor), 0) FILTER (WHERE paga = true) as total_pagas,
-			COALESCE(SUM(valor), 0) FILTER (WHERE paga = false AND vencimento > CURRENT_DATE) as pendentes,
-			COALESCE(SUM(valor), 0) FILTER (WHERE paga = false AND vencimento < CURRENT_DATE) as total_vencidas,
-			COALESCE(SUM(valor), 0) as total_despesas
+			COALESCE(SUM(valor),0) AS total_despesas,
+			COALESCE(SUM(valor),0) FILTER (WHERE paga=true)                          AS total_pagas,
+			COALESCE(SUM(valor),0) FILTER (WHERE paga=false AND vencimento>NOW())    AS pendentes,
+			COALESCE(SUM(valor),0) FILTER (WHERE paga=false AND vencimento<NOW())    AS total_vencidas,
+			(SELECT COALESCE(SUM(valor),0)
+			 FROM incomes
+			 WHERE user_id=$1 AND data_recebimento >= $2 AND data_recebimento < $3) AS receitas
 		FROM expenses
-		WHERE user_id = $1 AND vencimento >= $2 AND vencimento < $3
+		WHERE user_id=$1 AND vencimento >= $2 AND vencimento < $3;
 	`
 
 	err = db.DB.QueryRow(query, userID, startDate, endDate).Scan(
@@ -59,14 +63,14 @@ func GetMonthlySummary(w http.ResponseWriter, r *http.Request) {
 		&summary.Pendentes,
 		&summary.TotalVencidas,
 		&summary.TotalDespesas,
+		&summary.Receitas,
 	)
 	if err != nil && err != sql.ErrNoRows {
 		http.Error(w, "Erro ao buscar resumo: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	// saldo pode ser alterado futuramente com base em receitas, mas aqui será apenas o total de despesas negativas
-	summary.Saldo = -summary.TotalDespesas
+	summary.Saldo = summary.Receitas - summary.TotalDespesas // Calcular o saldo
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)

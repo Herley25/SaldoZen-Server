@@ -1,9 +1,450 @@
+definitions:
+  controllers.CategoryChart:
+    properties:
+      categoria:
+        type: string
+      total:
+        type: number
+    type: object
+  controllers.IncomeCategoryChart:
+    properties:
+      categoria:
+        type: string
+      total:
+        type: number
+    type: object
+  controllers.MonthChart:
+    properties:
+      mes:
+        type: string
+      total:
+        type: number
+    type: object
+  controllers.StatusChart:
+    properties:
+      status:
+        type: string
+      total:
+        type: number
+    type: object
+  models.Income:
+    properties:
+      categoria:
+        type: string
+      created_at:
+        type: string
+      data_recebimento:
+        type: string
+      descricao:
+        type: string
+      id:
+        type: string
+      observacoes:
+        type: string
+      user_id:
+        type: string
+      valor:
+        type: number
+    type: object
 info:
   contact: {}
   description: API de controle financeiro pessoal.
   title: SaldoZen API
   version: "1.0"
-paths: {}
+paths:
+  /charts/expenses-by-category/{userId}:
+    get:
+      parameters:
+      - description: ID do usuário
+        in: path
+        name: userId
+        required: true
+        type: string
+      - description: Mês (1-12)
+        in: query
+        name: month
+        required: true
+        type: string
+      - description: Ano (YYYY)
+        in: query
+        name: year
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/controllers.CategoryChart'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Despesas por categoria
+      tags:
+      - Charts
+  /charts/expenses-by-status/{userId}:
+    get:
+      parameters:
+      - description: ID do usuário
+        in: path
+        name: userId
+        required: true
+        type: string
+      - description: Mês (1-12)
+        in: query
+        name: month
+        required: true
+        type: string
+      - description: Ano (YYYY)
+        in: query
+        name: year
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/controllers.StatusChart'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Despesas por status
+      tags:
+      - Charts
+  /charts/incomes-by-category/{userId}:
+    get:
+      parameters:
+      - description: ID do usuário
+        in: path
+        name: userId
+        required: true
+        type: string
+      - description: Mês (1-12)
+        in: query
+        name: month
+        required: true
+        type: string
+      - description: Ano (YYYY)
+        in: query
+        name: year
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/controllers.IncomeCategoryChart'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Receitas por categoria
+      tags:
+      - Charts
+  /charts/monthly-summary/{userId}:
+    get:
+      parameters:
+      - description: ID do usuário
+        in: path
+        name: userId
+        required: true
+        type: string
+      - description: Ano (YYYY)
+        in: query
+        name: year
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/controllers.MonthChart'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Resumo mensal do ano
+      tags:
+      - Charts
+  /incomes/{userId}:
+    get:
+      parameters:
+      - description: ID do usuário
+        in: path
+        name: userId
+        required: true
+        type: string
+      - description: Mês (1-12)
+        in: query
+        name: month
+        required: true
+        type: string
+      - description: Ano (YYYY)
+        in: query
+        name: year
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Income'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Listar receitas
+      tags:
+      - Incomes
+    post:
+      parameters:
+      - description: ID do usuário
+        in: path
+        name: userId
+        required: true
+        type: string
+      - description: Dados da receita
+        in: body
+        name: income
+        required: true
+        schema:
+          $ref: '#/definitions/models.Income'
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Income'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Criar receita
+      tags:
+      - Incomes
+  /incomes/{userId}/{id}:
+    delete:
+      parameters:
+      - description: ID do usuário
+        in: path
+        name: userId
+        required: true
+        type: string
+      - description: ID da receita
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "404":
+          description: Not Found
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Excluir receita
+      tags:
+      - Incomes
+    get:
+      parameters:
+      - description: ID do usuário
+        in: path
+        name: userId
+        required: true
+        type: string
+      - description: ID da receita
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Income'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "404":
+          description: Not Found
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Buscar receita por ID
+      tags:
+      - Incomes
+    put:
+      parameters:
+      - description: ID do usuário
+        in: path
+        name: userId
+        required: true
+        type: string
+      - description: ID da receita
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Dados da receita
+        in: body
+        name: income
+        required: true
+        schema:
+          $ref: '#/definitions/models.Income'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Income'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Atualizar receita
+      tags:
+      - Incomes
+  /login:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Credenciais
+        in: body
+        name: credentials
+        required: true
+        schema:
+          properties:
+            email:
+              type: string
+            password:
+              type: string
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: erro
+          schema:
+            type: string
+        "401":
+          description: erro
+          schema:
+            type: string
+      summary: Login
+      tags:
+      - auth
 securityDefinitions:
   BearerAuth:
     in: header

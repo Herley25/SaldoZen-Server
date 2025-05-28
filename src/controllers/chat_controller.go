@@ -25,6 +25,11 @@ type MonthChart struct {
 	Total float64 `json:"total"`
 }
 
+type IncomeCategoryChart struct {
+	Categoria string  `json:"categoria"`
+	Total     float64 `json:"total"`
+}
+
 // GetExpensesByCategory retorna soma das despesas agrupadas por categoria
 //
 // @Summary Despesas por categoria
@@ -179,6 +184,60 @@ func GetMonthlySummaryChart(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		result = append(result, m)
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(result)
+}
+
+// GetIncomeByCategory retorna soma das receitas agrupadas por categoria
+//
+// @Summary Receitas por categoria
+// @Tags Charts
+// @Security BearerAuth
+// @Param userId path string true "ID do usuário"
+// @Param month query string true "Mês (1-12)"
+// @Param year query string true "Ano (YYYY)"
+// @Success 200 {array} IncomeCategoryChart
+// @Failure 400,401,500 {string} string
+// @Router /charts/incomes-by-category/{userId} [get]
+func GetIncomeByCategory(w http.ResponseWriter, r *http.Request) {
+	userID := mux.Vars(r)["userId"]
+
+	monthStr := r.URL.Query().Get("month")
+	yearStr := r.URL.Query().Get("year")
+
+	month, err1 := strconv.Atoi(monthStr)
+	year, err2 := strconv.Atoi(yearStr)
+	if err1 != nil || err2 != nil || month < 1 || month > 12 {
+		http.Error(w, "Parâmetros de mês/ano inválidos", http.StatusBadRequest)
+		return
+	}
+
+	start := time.Date(year, time.Month(month), 1, 0, 0, 0, 0, time.UTC) // Define o início do mês
+	end := start.AddDate(0, 1, 0)                                        // Adiciona um mês para definir o final do mês
+
+	rows, err := db.DB.Query(`
+		SELECT categoria, COALESCE(SUM(valor), 0) AS total
+		FROM incomes
+		WHERE user_id = $1 AND data_recebimento >= $2 AND data_recebimento < $3
+		GROUP BY categoria
+		ORDER BY total DESC
+	`, userID, start, end)
+	if err != nil {
+		http.Error(w, "Erro ao buscar dados", http.StatusInternalServerError)
+		return
+	}
+	defer rows.Close() // Fecha as linhas após o uso
+
+	var result []IncomeCategoryChart
+	for rows.Next() {
+		var row IncomeCategoryChart
+		if err := rows.Scan(&row.Categoria, &row.Total); err != nil {
+			http.Error(w, "Erro ao processar dados", http.StatusInternalServerError)
+			return
+		}
+		result = append(result, row)
 	}
 
 	w.Header().Set("Content-Type", "application/json")

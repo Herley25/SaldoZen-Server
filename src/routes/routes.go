@@ -14,8 +14,6 @@ import (
 func SetupRoutes() http.Handler {
 	r := mux.NewRouter()
 
-	r.PathPrefix("/swagger/").Handler(httpSwagger.WrapHandler)
-
 	r.HandleFunc("/users", controllers.CreateUser).Methods("POST")
 	r.HandleFunc("/login", controllers.LoginUser).Methods("POST")
 	r.HandleFunc("/refresh", controllers.RefreshToken).Methods("POST")
@@ -48,6 +46,16 @@ func SetupRoutes() http.Handler {
 	r.Handle("/charts/expenses-by-category/{userId}", secure(http.HandlerFunc(controllers.GetExpensesByCategory))).Methods("GET")
 	r.Handle("/charts/expenses-by-status/{userId}", secure(http.HandlerFunc(controllers.GetExpensesByStatus))).Methods("GET")
 	r.Handle("/charts/monthly-summary/{userId}", secure(http.HandlerFunc(controllers.GetMonthlySummaryChart))).Methods("GET")
+	r.Handle("/charts/incomes-by-category/{userId}", secure(http.HandlerFunc(controllers.GetIncomeByCategory))).Methods("GET")
+
+	// Rota para receitas
+	r.Handle("/incomes/{userId}", secure(http.HandlerFunc(controllers.CreateIncome))).Methods("POST")
+	r.Handle("/incomes/{userId}", secure(http.HandlerFunc(controllers.ListIncomes))).Methods("GET")
+	r.Handle("/incomes/{userId}/{id}", secure(http.HandlerFunc(controllers.GetIncomeByID))).Methods("GET")
+	r.Handle("/incomes/{userId}/{id}", secure(http.HandlerFunc(controllers.UpdateIncome))).Methods("PUT")
+	r.Handle("/incomes/{userId}/{id}", secure(http.HandlerFunc(controllers.DeleteIncome))).Methods("DELETE")
+
+	r.PathPrefix("/swagger/").Handler(httpSwagger.WrapHandler)
 
 	return r
 }

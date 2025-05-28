@@ -29,3 +29,15 @@ CREATE TABLE IF NOT EXISTS categories (
   created_at TIMESTAMP DEFAULT NOW(),
   UNIQUE (user_id, name) -- impede categorias duplicadas para o mesmo usuário
 );
+
+-- Incomes
+CREATE TABLE IF NOT EXISTS incomes (
+  id UUID PRIMARY KEY,
+  user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+  descricao TEXT NOT NULL,
+  valor NUMERIC(10,2) CHECK (valor > 0),
+  data_recebimento DATE NOT NULL,
+  categoria TEXT NOT NULL,
+  observacoes TEXT,
+  created_at TIMESTAMP DEFAULT NOW()
+);
