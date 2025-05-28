@@ -15,6 +15,12 @@ import (
 	"finance/src/config"
 	"finance/src/db"
 	"finance/src/routes"
+
+	_ "finance/src/controllers"
+	_ "finance/src/docs" // Importando os docs gerados pelo Swag
+	_ "finance/src/models"
+
+	_ "github.com/swaggo/http-swagger" // Importando o Swagger para documentação
 )
 
 func main() {
