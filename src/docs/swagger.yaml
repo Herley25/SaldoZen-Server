@@ -13,6 +13,11 @@ definitions:
       total:
         type: number
     type: object
+  controllers.Message:
+    properties:
+      message:
+        type: string
+    type: object
   controllers.MonthChart:
     properties:
       mes:
@@ -26,6 +31,42 @@ definitions:
         type: string
       total:
         type: number
+    type: object
+  models.Category:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      user_id:
+        type: string
+    type: object
+  models.Expense:
+    properties:
+      categoria:
+        type: string
+      created_at:
+        type: string
+      data_pagamento:
+        type: string
+      descricao:
+        type: string
+      id:
+        type: string
+      observacoes:
+        type: string
+      paga:
+        type: boolean
+      status:
+        type: string
+      user_id:
+        type: string
+      valor:
+        type: number
+      vencimento:
+        type: string
     type: object
   models.Income:
     properties:
@@ -46,12 +87,141 @@ definitions:
       valor:
         type: number
     type: object
+  models.Summary:
+    properties:
+      ano:
+        type: integer
+      mes:
+        type: integer
+      pendentes:
+        type: number
+      receitas:
+        type: number
+      saldo:
+        type: number
+      total_despesas:
+        type: number
+      total_pagas:
+        type: number
+      total_vencidas:
+        type: number
+    type: object
+  models.User:
+    properties:
+      created_at:
+        type: string
+      email:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      password:
+        type: string
+    type: object
 info:
   contact: {}
   description: API de controle financeiro pessoal.
   title: SaldoZen API
   version: "1.0"
 paths:
+  /categories:
+    post:
+      parameters:
+      - description: Dados da categoria
+        in: body
+        name: category
+        required: true
+        schema:
+          $ref: '#/definitions/models.Category'
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Category'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Criar categoria
+      tags:
+      - Categories
+  /categories/{id}:
+    delete:
+      parameters:
+      - description: ID da categoria
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "204":
+          description: Categoria excluída com sucesso
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "404":
+          description: Not Found
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Excluir categoria
+      tags:
+      - Categories
+  /categories/{userId}:
+    get:
+      parameters:
+      - description: ID do usuário
+        in: path
+        name: userId
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Category'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Listar categorias
+      tags:
+      - Categories
   /charts/expenses-by-category/{userId}:
     get:
       parameters:
@@ -213,6 +383,69 @@ paths:
       summary: Resumo mensal do ano
       tags:
       - Charts
+  /expenses:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Despesa
+        in: body
+        name: expense
+        required: true
+        schema:
+          $ref: '#/definitions/models.Expense'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Expense'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Criar despesa
+      tags:
+      - Despesas
+  /expenses/{userId}:
+    get:
+      parameters:
+      - description: ID do usuário
+        in: path
+        name: userId
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Expense'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Listar todas as despesas
+      tags:
+      - Despesas
   /incomes/{userId}:
     get:
       parameters:
@@ -445,6 +678,293 @@ paths:
       summary: Login
       tags:
       - auth
+  /refresh:
+    post:
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Revalidar token
+      tags:
+      - Auth
+  /summary/{userId}:
+    get:
+      parameters:
+      - description: ID do usuário
+        in: path
+        name: userId
+        required: true
+        type: string
+      - description: Mês (1-12)
+        in: query
+        name: month
+        required: true
+        type: string
+      - description: Ano (YYYY)
+        in: query
+        name: year
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Summary'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Resumo mensal
+      tags:
+      - Summary
+  /users/{id}:
+    get:
+      parameters:
+      - description: ID do usuário
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.User'
+        "404":
+          description: Not Found
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Detalhes do usuário
+      tags:
+      - Users
+  /users/{userId}/expenses/{id}:
+    delete:
+      parameters:
+      - description: ID do usuário
+        in: path
+        name: userId
+        required: true
+        type: string
+      - description: ID da despesa
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: Despesa excluída com sucesso
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "404":
+          description: Not Found
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Excluir despesa
+      tags:
+      - Despesas
+    get:
+      parameters:
+      - description: ID do usuário
+        in: path
+        name: userId
+        required: true
+        type: string
+      - description: ID da despesa
+        in: path
+        name: expenseId
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Expense'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "404":
+          description: Not Found
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Buscar despesa por ID
+      tags:
+      - Despesas
+    put:
+      parameters:
+      - description: ID do usuário
+        in: path
+        name: userId
+        required: true
+        type: string
+      - description: ID da despesa
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Dados da despesa
+        in: body
+        name: expense
+        required: true
+        schema:
+          $ref: '#/definitions/models.Expense'
+      responses:
+        "204":
+          description: Despesa atualizada com sucesso
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "404":
+          description: Not Found
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Atualizar despesa
+      tags:
+      - Despesas
+  /users/{userId}/expenses/{id}/pay:
+    patch:
+      parameters:
+      - description: ID do usuário
+        in: path
+        name: userId
+        required: true
+        type: string
+      - description: ID da despesa
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: Despesa marcada como paga com sucesso
+          schema:
+            $ref: '#/definitions/controllers.Message'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "404":
+          description: Not Found
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Marcar despesa como paga
+      tags:
+      - Despesas
+  /users/{userId}/expenses/{id}/unpay:
+    patch:
+      parameters:
+      - description: ID do usuário
+        in: path
+        name: userId
+        required: true
+        type: string
+      - description: ID da despesa
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: Despesa marcada como não paga com sucesso
+          schema:
+            $ref: '#/definitions/controllers.Message'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "404":
+          description: Not Found
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Marcar despesa como não paga
+      tags:
+      - Despesas
 securityDefinitions:
   BearerAuth:
     in: header

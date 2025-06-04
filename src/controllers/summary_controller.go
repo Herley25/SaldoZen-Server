@@ -13,6 +13,17 @@ import (
 	"github.com/gorilla/mux"
 )
 
+// GetMonthlySummary retorna o resumo mensal de despesas e receitas de um usuário
+//
+// @Summary Resumo mensal
+// @Tags Summary
+// @Security BearerAuth
+// @Param userId path string true "ID do usuário"
+// @Param month query string true "Mês (1-12)"
+// @Param year query string true "Ano (YYYY)"
+// @Success 200 {object} models.Summary
+// @Failure 400,401,500 {string} string
+// @Router /summary/{userId} [get]
 func GetMonthlySummary(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	userIDStr := vars["userId"]

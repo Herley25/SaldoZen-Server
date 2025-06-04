@@ -16,16 +16,15 @@ import (
 
 // Controller para criar uma nova despesa
 
-//	@Summary	Criar despesa
-//	@Tags		despesas
-//	@Security	BearerAuth
-//	@Accept		json
-//	@Produce	json
-//	@Param		expense	body		models.Expense	true	"Despesa"
-//	@Success	201	{object}	models.Expense
-//	@Failure	400,401	{string}	string
-//	@Router		/expenses [post]
-
+// @Summary	Criar despesa
+// @Tags		Despesas
+// @Security	BearerAuth
+// @Accept		json
+// @Produce	json
+// @Param		expense	body		models.Expense	true	"Despesa"
+// @Success	201	{object}	models.Expense
+// @Failure	400,401	{string}	string
+// @Router		/expenses [post]
 func CreateExpense(w http.ResponseWriter, r *http.Request) {
 	var expense models.Expense
 	if err := json.NewDecoder(r.Body).Decode(&expense); err != nil {
@@ -59,7 +58,17 @@ func CreateExpense(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(expense)
 }
 
-// Controller para listar despesas por mês e ano
+// ListExpenses retorna as despesas de um usuário filtradas por mês e ano
+//
+// @Summary Listar despesas
+// @Tags Despesas
+// @Security BearerAuth
+// @Param userId path string true "ID do usuário"
+// @Param month query string false "Mês (1-12)"
+// @Param year query string false "Ano (YYYY)"
+// @Success 200 {array} models.Expense
+// @Failure 400,401,500 {string} string
+// @Router /expenses/{userId} [get]
 func ListExpenses(w http.ResponseWriter, r *http.Request) {
 	userId := mux.Vars(r)["userId"]
 
@@ -123,7 +132,15 @@ func ListExpenses(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(expenses)
 }
 
-// Listar todas as despesas de um usuário
+// ListAllExpenses retorna todas as despesas de um usuário
+//
+// @Summary Listar todas as despesas
+// @Tags Despesas
+// @Security BearerAuth
+// @Param userId path string true "ID do usuário"
+// @Success 200 {array} models.Expense
+// @Failure 400,401,500 {string} string
+// @Router /expenses/{userId} [get]
 func ListAllExpenses(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	userId := params["userId"]
@@ -170,7 +187,16 @@ func ListAllExpenses(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(expenses)
 }
 
-// Buscar uma despesa específica
+// GetExpenseByID busca uma despesa específica pelo ID
+//
+// @Summary Buscar despesa por ID
+// @Tags Despesas
+// @Security BearerAuth
+// @Param userId path string true "ID do usuário"
+// @Param expenseId path string true "ID da despesa"
+// @Success 200 {object} models.Expense
+// @Failure 400,401,404,500 {string} string
+// @Router /users/{userId}/expenses/{id} [get]
 func GetExpenseByID(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	userId := params["userId"]
@@ -223,7 +249,17 @@ func GetExpenseByID(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(response)
 }
 
-// Editar uma despesa
+// UpdateExpense atualiza uma despesa existente
+//
+// @Summary Atualizar despesa
+// @Tags Despesas
+// @Security BearerAuth
+// @Param userId path string true "ID do usuário"
+// @Param id path string true "ID da despesa"
+// @Param expense body models.Expense true "Dados da despesa"
+// @Success 204 {string} string "Despesa atualizada com sucesso"
+// @Failure 400,401,404,500 {string} string
+// @Router /users/{userId}/expenses/{id} [put]
 func UpdateExpense(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	userId := params["userId"]
@@ -277,6 +313,16 @@ type Message struct {
 	Message string `json:"message"`
 }
 
+// DeleteExpense exclui uma despesa de um usuário pelo ID
+//
+// @Summary Excluir despesa
+// @Tags Despesas
+// @Security BearerAuth
+// @Param userId path string true "ID do usuário"
+// @Param id path string true "ID da despesa"
+// @Success 200 {object} string "Despesa excluída com sucesso"
+// @Failure 400,401,404,500 {string} string
+// @Router /users/{userId}/expenses/{id} [delete]
 func DeleteExpense(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	userId := params["userId"]
@@ -303,7 +349,16 @@ func DeleteExpense(w http.ResponseWriter, r *http.Request) {
 	_ = json.NewEncoder(w).Encode(Message{Message: "Despesa excluída com sucesso"})
 }
 
-// Marcar uma despesa como paga
+// PayExpense marca uma despesa como paga
+//
+// @Summary Marcar despesa como paga
+// @Tags Despesas
+// @Security BearerAuth
+// @Param userId path string true "ID do usuário"
+// @Param id path string true "ID da despesa"
+// @Success 200 {object} Message "Despesa marcada como paga com sucesso"
+// @Failure 400,401,404,500 {string} string
+// @Router /users/{userId}/expenses/{id}/pay [patch]
 func PayExpense(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	userId := params["userId"]
@@ -335,7 +390,16 @@ func PayExpense(w http.ResponseWriter, r *http.Request) {
 	_ = json.NewEncoder(w).Encode(Message{Message: "Despesa marcada como paga com sucesso"})
 }
 
-// Marcar uma despesa como não paga
+// UnpayExpense marca uma despesa como não paga
+//
+// @Summary Marcar despesa como não paga
+// @Tags Despesas
+// @Security BearerAuth
+// @Param userId path string true "ID do usuário"
+// @Param id path string true "ID da despesa"
+// @Success 200 {object} Message "Despesa marcada como não paga com sucesso"
+// @Failure 400,401,404,500 {string} string
+// @Router /users/{userId}/expenses/{id}/unpay [patch]
 func UnpayExpense(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	userId := params["userId"]

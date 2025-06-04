@@ -135,7 +135,15 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-// GetUser retorna os dados do usuário autenticado
+// GetUserById retorna os detalhes de um usuário pelo ID
+//
+// @Summary	Detalhes do usuário
+// @Tags	Users
+// @Security BearerAuth
+// @Param	id	path	string	true	"ID do usuário"
+// @Success	200	{object}	models.User
+// @Failure	404,500	{string}	string
+// @Router	/users/{id} [get]
 func GetUserById(w http.ResponseWriter, r *http.Request) {
 	id := mux.Vars(r)["id"]
 
@@ -159,7 +167,14 @@ func GetUserById(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(user)
 }
 
-// RefreshToken atualiza o token JWT
+// RefreshToken renova o token de acesso usando o refresh token
+//
+// @Summary	Revalidar token
+// @Tags	Auth
+// @Security BearerAuth
+// @Success	200	{object}	map[string]string
+// @Failure	401,500	{string}	string
+// @Router	/refresh [post]
 func RefreshToken(w http.ResponseWriter, r *http.Request) {
 	cookie, err := r.Cookie("refresh_token")
 	if err != nil {

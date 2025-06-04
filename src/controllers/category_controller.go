@@ -11,7 +11,15 @@ import (
 	"github.com/gorilla/mux"
 )
 
-// Criar uma nova categoria
+// CreateCategory cria uma nova categoria para um usuário
+//
+// @Summary Criar categoria
+// @Tags Categories
+// @Security BearerAuth
+// @Param category body models.Category true "Dados da categoria"
+// @Success 201 {object} models.Category
+// @Failure 400,401,500 {string} string
+// @Router /categories [post]
 func CreateCategory(w http.ResponseWriter, r *http.Request) {
 	var cat models.Category
 	if err := json.NewDecoder(r.Body).Decode(&cat); err != nil {
@@ -42,7 +50,15 @@ func CreateCategory(w http.ResponseWriter, r *http.Request) {
 	_ = json.NewEncoder(w).Encode(cat)
 }
 
-// Listar todas as categorias de um usuário
+// GetCategories retorna todas as categorias de um usuário
+//
+// @Summary Listar categorias
+// @Tags Categories
+// @Security BearerAuth
+// @Param userId path string true "ID do usuário"
+// @Success 200 {array} models.Category
+// @Failure 400,401,500 {string} string
+// @Router /categories/{userId} [get]
 func GetCategories(w http.ResponseWriter, r *http.Request) {
 	userID := mux.Vars(r)["userId"]
 
@@ -73,7 +89,15 @@ func GetCategories(w http.ResponseWriter, r *http.Request) {
 	_ = json.NewEncoder(w).Encode(categories)
 }
 
-// Excluir uma categoria
+// DeleteCategory exclui uma categoria pelo ID
+//
+// @Summary Excluir categoria
+// @Tags Categories
+// @Security BearerAuth
+// @Param id path string true "ID da categoria"
+// @Success 204 {string} string "Categoria excluída com sucesso"
+// @Failure 400,401,404,500 {string} string
+// @Router /categories/{id} [delete]
 func DeleteCategory(w http.ResponseWriter, r *http.Request) {
 	id := mux.Vars(r)["id"]
 
