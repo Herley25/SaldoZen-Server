@@ -17,7 +17,7 @@ import (
 // Controller para criar uma nova despesa
 
 // @Summary	Criar despesa
-// @Tags		Despesas
+// @Tags		Expenses
 // @Security	BearerAuth
 // @Accept		json
 // @Produce	json
@@ -61,7 +61,7 @@ func CreateExpense(w http.ResponseWriter, r *http.Request) {
 // ListExpenses retorna as despesas de um usuário filtradas por mês e ano
 //
 // @Summary Listar despesas
-// @Tags Despesas
+// @Tags Expenses
 // @Security BearerAuth
 // @Param userId path string true "ID do usuário"
 // @Param month query string false "Mês (1-12)"
@@ -135,7 +135,7 @@ func ListExpenses(w http.ResponseWriter, r *http.Request) {
 // ListAllExpenses retorna todas as despesas de um usuário
 //
 // @Summary Listar todas as despesas
-// @Tags Despesas
+// @Tags Expenses
 // @Security BearerAuth
 // @Param userId path string true "ID do usuário"
 // @Success 200 {array} models.Expense
@@ -190,7 +190,7 @@ func ListAllExpenses(w http.ResponseWriter, r *http.Request) {
 // GetExpenseByID busca uma despesa específica pelo ID
 //
 // @Summary Buscar despesa por ID
-// @Tags Despesas
+// @Tags Expenses
 // @Security BearerAuth
 // @Param userId path string true "ID do usuário"
 // @Param expenseId path string true "ID da despesa"
@@ -252,7 +252,7 @@ func GetExpenseByID(w http.ResponseWriter, r *http.Request) {
 // UpdateExpense atualiza uma despesa existente
 //
 // @Summary Atualizar despesa
-// @Tags Despesas
+// @Tags Expenses
 // @Security BearerAuth
 // @Param userId path string true "ID do usuário"
 // @Param id path string true "ID da despesa"
@@ -316,7 +316,7 @@ type Message struct {
 // DeleteExpense exclui uma despesa de um usuário pelo ID
 //
 // @Summary Excluir despesa
-// @Tags Despesas
+// @Tags Expenses
 // @Security BearerAuth
 // @Param userId path string true "ID do usuário"
 // @Param id path string true "ID da despesa"
@@ -352,7 +352,7 @@ func DeleteExpense(w http.ResponseWriter, r *http.Request) {
 // PayExpense marca uma despesa como paga
 //
 // @Summary Marcar despesa como paga
-// @Tags Despesas
+// @Tags Expenses
 // @Security BearerAuth
 // @Param userId path string true "ID do usuário"
 // @Param id path string true "ID da despesa"
@@ -393,7 +393,7 @@ func PayExpense(w http.ResponseWriter, r *http.Request) {
 // UnpayExpense marca uma despesa como não paga
 //
 // @Summary Marcar despesa como não paga
-// @Tags Despesas
+// @Tags Expenses
 // @Security BearerAuth
 // @Param userId path string true "ID do usuário"
 // @Param id path string true "ID da despesa"

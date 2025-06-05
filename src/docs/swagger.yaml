@@ -413,7 +413,7 @@ paths:
       - BearerAuth: []
       summary: Criar despesa
       tags:
-      - Despesas
+      - Expenses
   /expenses/{userId}:
     get:
       parameters:
@@ -445,7 +445,7 @@ paths:
       - BearerAuth: []
       summary: Listar todas as despesas
       tags:
-      - Despesas
+      - Expenses
   /incomes/{userId}:
     get:
       parameters:
@@ -804,7 +804,7 @@ paths:
       - BearerAuth: []
       summary: Excluir despesa
       tags:
-      - Despesas
+      - Expenses
     get:
       parameters:
       - description: ID do usuário
@@ -842,7 +842,7 @@ paths:
       - BearerAuth: []
       summary: Buscar despesa por ID
       tags:
-      - Despesas
+      - Expenses
     put:
       parameters:
       - description: ID do usuário
@@ -886,7 +886,7 @@ paths:
       - BearerAuth: []
       summary: Atualizar despesa
       tags:
-      - Despesas
+      - Expenses
   /users/{userId}/expenses/{id}/pay:
     patch:
       parameters:
@@ -925,7 +925,7 @@ paths:
       - BearerAuth: []
       summary: Marcar despesa como paga
       tags:
-      - Despesas
+      - Expenses
   /users/{userId}/expenses/{id}/unpay:
     patch:
       parameters:
@@ -964,7 +964,7 @@ paths:
       - BearerAuth: []
       summary: Marcar despesa como não paga
       tags:
-      - Despesas
+      - Expenses
 securityDefinitions:
   BearerAuth:
     in: header

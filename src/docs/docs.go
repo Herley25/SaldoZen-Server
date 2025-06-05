@@ -432,7 +432,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Despesas"
+                    "Expenses"
                 ],
                 "summary": "Criar despesa",
                 "parameters": [
@@ -476,7 +476,7 @@ const docTemplate = `{
                     }
                 ],
                 "tags": [
-                    "Despesas"
+                    "Expenses"
                 ],
                 "summary": "Listar todas as despesas",
                 "parameters": [
@@ -1028,7 +1028,7 @@ const docTemplate = `{
                     }
                 ],
                 "tags": [
-                    "Despesas"
+                    "Expenses"
                 ],
                 "summary": "Buscar despesa por ID",
                 "parameters": [
@@ -1087,7 +1087,7 @@ const docTemplate = `{
                     }
                 ],
                 "tags": [
-                    "Despesas"
+                    "Expenses"
                 ],
                 "summary": "Atualizar despesa",
                 "parameters": [
@@ -1155,7 +1155,7 @@ const docTemplate = `{
                     }
                 ],
                 "tags": [
-                    "Despesas"
+                    "Expenses"
                 ],
                 "summary": "Excluir despesa",
                 "parameters": [
@@ -1216,7 +1216,7 @@ const docTemplate = `{
                     }
                 ],
                 "tags": [
-                    "Despesas"
+                    "Expenses"
                 ],
                 "summary": "Marcar despesa como paga",
                 "parameters": [
@@ -1277,7 +1277,7 @@ const docTemplate = `{
                     }
                 ],
                 "tags": [
-                    "Despesas"
+                    "Expenses"
                 ],
                 "summary": "Marcar despesa como não paga",
                 "parameters": [

@@ -424,7 +424,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Despesas"
+                    "Expenses"
                 ],
                 "summary": "Criar despesa",
                 "parameters": [
@@ -468,7 +468,7 @@
                     }
                 ],
                 "tags": [
-                    "Despesas"
+                    "Expenses"
                 ],
                 "summary": "Listar todas as despesas",
                 "parameters": [
@@ -1020,7 +1020,7 @@
                     }
                 ],
                 "tags": [
-                    "Despesas"
+                    "Expenses"
                 ],
                 "summary": "Buscar despesa por ID",
                 "parameters": [
@@ -1079,7 +1079,7 @@
                     }
                 ],
                 "tags": [
-                    "Despesas"
+                    "Expenses"
                 ],
                 "summary": "Atualizar despesa",
                 "parameters": [
@@ -1147,7 +1147,7 @@
                     }
                 ],
                 "tags": [
-                    "Despesas"
+                    "Expenses"
                 ],
                 "summary": "Excluir despesa",
                 "parameters": [
@@ -1208,7 +1208,7 @@
                     }
                 ],
                 "tags": [
-                    "Despesas"
+                    "Expenses"
                 ],
                 "summary": "Marcar despesa como paga",
                 "parameters": [
@@ -1269,7 +1269,7 @@
                     }
                 ],
                 "tags": [
-                    "Despesas"
+                    "Expenses"
                 ],
                 "summary": "Marcar despesa como não paga",
                 "parameters": [
