@@ -1,4 +1,4 @@
-# 📊 SALDOZEN API
+# 📊 SaldoZen API
 
 API RESTful desenvolvida em **Go** com arquitetura **MVC**, persistência em **PostgreSQL** e autenticação baseada em UUID. Ideal para controle e gestão de despesas com foco em escalabilidade e boas práticas.
 
