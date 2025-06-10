@@ -57,5 +57,5 @@ func SetupRoutes() http.Handler {
 
 	r.PathPrefix("/swagger/").Handler(httpSwagger.WrapHandler)
 
-	return r
+	return middlewares.CORS(r)
 }
